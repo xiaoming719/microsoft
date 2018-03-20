@@ -1,0 +1,62 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+//using System.Windows.Shapes;
+using System.Windows.Forms;
+using System.Xml;
+using System.IO;
+
+
+namespace xml_analisys_WpfApp
+{
+    /// <summary>
+    /// MainWindow.xaml 的交互逻辑
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+        private void selectFilePathBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = true;//该值确定是否可以选择多个文件
+            dialog.Title = "请选择文件夹";
+            dialog.Filter = "所有文件(*.*)|*.*";
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                selectFileTB.Text = dialog.FileName;
+            }
+        }
+
+        private void kml_analisysBtn_Click(object sender, RoutedEventArgs e)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(selectFileTB.Text);
+
+            XmlNodeList nodeList;
+            nodeList = doc.GetElementsByTagName("description");
+
+            foreach (XmlNode description in nodeList)
+            {
+                description.InnerText = " ";
+            }
+            string path1 = this.GetType().Assembly.Location;
+            string path2 = Path.GetDirectoryName(path1);
+            string path3 = path2 + @"\result.kml";
+            doc.Save(path3);
+        }
+        
+    }
+}
+
