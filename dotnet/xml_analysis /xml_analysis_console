@@ -1,0 +1,29 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml;
+
+namespace xml_analisys
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("C:/Users/Administrator/Desktop/workspace/Floor.kml");
+
+            XmlNodeList nodeList;
+            nodeList = doc.GetElementsByTagName("description");
+
+            foreach (XmlNode description in nodeList)
+            {
+                description.InnerText = " ";
+            }
+            
+            doc.Save("C:/Users/Administrator/Desktop/workspace/Floor_1.kml");
+            //Console.Write(this.GetType().Assembly.Location);
+            Console.Read();
+        }
+    }
+}
