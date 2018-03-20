@@ -1,0 +1,110 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+//using System.Windows.Shapes;
+using System.Windows.Forms;
+using System.Xml;
+using System.IO;
+
+
+namespace xml_analisys_WpfApp
+{
+    /// <summary>
+    /// MainWindow.xaml 的交互逻辑
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+        private void selectFilePathBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = true;//该值确定是否可以选择多个文件
+            dialog.Title = "请选择文件夹";
+            dialog.Filter = "所有文件(*.*)|*.*";
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                selectFileTB.Text = dialog.FileName;
+            }
+        }
+
+        private void kml_analisysBtn_Click(object sender, RoutedEventArgs e)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(selectFileTB.Text);
+
+            XmlNodeList nodeList1, nodeList2, nodeList3, nodeList4;
+            int nodeList1_count, nodeList2_count, nodeList3_count, nodeList4_count;
+            nodeList1 = doc.GetElementsByTagName("description");
+            nodeList2 = doc.GetElementsByTagName("name");
+            nodeList3 = doc.GetElementsByTagName("ExtendedData");
+            nodeList4 = doc.GetElementsByTagName("Schema");
+            nodeList1_count = nodeList1.Count; nodeList2_count = nodeList2.Count;
+            nodeList3_count = nodeList3.Count; nodeList4_count = nodeList4.Count;
+
+            for (int i = 0; i < nodeList4_count; i++)
+            {
+                XmlNode node4 = nodeList4[nodeList4_count - i - 1];
+                node4.ParentNode.RemoveChild(node4);
+            }
+
+            for (int j = 0; j < nodeList3_count; j++)
+            {
+                XmlNode node3 = nodeList3[nodeList3_count - j - 1];
+                node3.ParentNode.RemoveChild(node3);
+            }
+
+            for (int k = 0; k < nodeList1_count; k++)
+            {
+                XmlNode node1 = nodeList1[nodeList1_count - k - 1];
+                node1.ParentNode.RemoveChild(node1);
+            }
+
+            for (int l = 0; l < nodeList2_count; l++)
+            {
+                XmlNode node2 = nodeList2[nodeList2_count - l - 1];
+                node2.ParentNode.RemoveChild(node2);
+            }
+
+
+            //foreach (XmlNode description in nodeList1)
+            //{
+            //    description.InnerText = " ";
+            //}
+            //foreach (XmlNode name in nodeList2)
+            //{
+            //    name.InnerText = " ";
+            //}
+            //foreach (XmlNode ExtendedData in nodeList3)
+            //{
+            //    ExtendedData.InnerText = " ";
+            //}
+            //foreach (XmlNode Schema in nodeList4)
+            //{
+            //    Schema.InnerText = " ";
+            //}
+            string path1 = this.GetType().Assembly.Location;
+            string path2 = Path.GetDirectoryName(path1);
+            string path3 = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+            string path4 = path3 + @"\result.kml";
+            doc.Save(path4);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+        
+    }
+}
